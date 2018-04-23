@@ -8,10 +8,14 @@ class The_Movie_DB:
         self.api_key = api_key
 
     def get_movie_id(self, movie_name):
-        # using the Requests module, we can organize all the parameters into a dictionary
+        # using the Requests module, we can organize
+        # all the parameters into a dictionary
         # and then pass them off to the get Request
-        payload = {'include_adult': 'false', 'page': '1',
-                   'query': movie_name, 'language': 'en-US', 'api_key': self.api_key, }
+        payload = {'include_adult': 'false',
+                   'page': '1',
+                   'query': movie_name,
+                   'language': 'en-US',
+                   'api_key': self.api_key, }
 
         # make the request to the database
         r = requests.get(
@@ -32,9 +36,9 @@ class The_Movie_DB:
         payload = {'api_key': self.api_key, 'language': 'en-US',
                    'append_to_response': 'videos'}
         r = requests.get(
-            'https://api.themoviedb.org/3/movie/{}'.format(movie_id), params=payload)
-        # print(r.url)
-        # print(r.json().get('poster_path'))
+            'https://api.themoviedb.org/3/movie/{}'.format(movie_id),
+            params=payload)
+
         if r.status_code == 429:
             # status code 429 means we sent too many requests.
             # 'Retry-After' is the amount of seconds that it wants us to wait
