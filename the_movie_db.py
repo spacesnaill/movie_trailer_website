@@ -1,5 +1,6 @@
 import urllib
 import urllib.error
+import requests
 import json
 import time
 from http import client
@@ -8,57 +9,57 @@ from http import client
 class The_Movie_DB:
     def __init__(self, api_key):
         self.api_key = api_key
-        self.connection = client.HTTPSConnection("api.themoviedb.org")
 
-    def get_movie_id(self, movie_name, year=''):
-        # cleans up the name to something that can actually be used in an http request
-        movie_name = urllib.parse.quote(movie_name)
+    def get_movie_id(self, movie_name):
+        # using the Requests module, we can organize all the parameters into a dictionary
+        # and then pass them off to the get Request
+        payload = {'include_adult': 'false', 'page': '1',
+                   'query': movie_name, 'language': 'en-US', 'api_key': self.api_key, }
 
-        # search the movie database for a particular name along with the year if that's available information
-        # returns the id of the first movie that comes out o the search
-        # try to make a request, if throttled then back off by the amount that it asks us to
-        try:
-            self.connection.request(
-                "GET",
-                f"/3/search/movie?{year}&include_adult=false&page=1&query={movie_name}&language=en-US&api_key={self.api_key}&append_to_response=videos")
-            result = self.connection.getresponse()
-            data = result.read()
-            if data == None:
-                return None
-            movie_info = json.loads(data)
-            try:
-                return movie_info['results'][0]['id']
-            except (IndexError, KeyError) as index_error:
-                return None
-        except urllib.error.HTTPError as error:
-            print(error.reason)
-            time.sleep(error.headers['Retry-After'])
-            # recurseively call to get the output we want after backing off
-            return self.get_movie_id(movie_name, year)
+        # make the request to the database
+        r = requests.get(
+            'http://api.themoviedb.org/3/search/movie', params=payload)
+        print(r.status_code)
+        if r.status_code == 429:
+            # status code 429 means we sent too many requests.
+            # 'Retry-After' is the amount of seconds that it wants us to wait
+            # before sending another request.
+            time.sleep(int(r.headers.get('Retry-After')))
+            return self.get_movie_id(movie_name)
+        else:
+            # return the id of the first movie in the search results
+            return r.json().get('results')[0].get('id')
 
     def get_movie_data(self, movie_id, *args):
-        # takes in the id of the movie and a variable number of arguments
-        try:
-            self.connection.request(
-                "GET",
-                f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={self.api_key}&language=en-US&append_to_response=videos")
-            result = self.connection.getresponse()
-            data = result.read()
-            movie_info = json.loads(data)
-
-            output = {}
-
-            for data_request in args:
-                if data_request == 'trailer' or data_request == 'video' or data_request == 'videos':
-                    try:
-                        output[data_request] = movie_info['videos']['results'][0]['key']
-                    except IndexError as index_error:
-                        output[data_request] = '5Peo-ivmupE'
-                else:
-                    output[data_request] = movie_info[data_request]
-            return output
-        except urllib.error.HTTPError as error:
-            print(error.reason)
-            time.sleep(error.headers['Retry-After'])
-            # recurseively call to get the output we want after backing off
+        # make a http request to the movie database using the movie_id
+        # proivded as a parameter to get that particular movie's data
+        payload = {'api_key': self.api_key, 'language': 'en-US',
+                   'append_to_response': 'videos'}
+        r = requests.get(
+            'https://api.themoviedb.org/3/movie/{}'.format(movie_id), params=payload)
+        # print(r.url)
+        # print(r.json().get('poster_path'))
+        if r.status_code == 429:
+            # status code 429 means we sent too many requests.
+            # 'Retry-After' is the amount of seconds that it wants us to wait
+            # before sending another request.
+            time.sleep(int(r.headers.get('Retry-After')))
             return self.get_movie_data(movie_id, args)
+        data_output = {}
+
+        for element in args:
+            if element == 'videos' or element == 'video' or element == 'trailer':
+                try:
+                    data_output[element] = r.json().get(
+                        'videos').get('results')[0].get('key')
+                except IndexError as i_error:
+                    # appends a placeholder video key if there is no video
+                    data_output[element] = '5Peo-ivmupE'
+            else:
+                try:
+                    data_output[element] = r.json().get(element)
+                except KeyError as k_error:
+                    # appends None if the argument isn't found
+                    data_output[element] = None
+        # return a dictionary with the data requested
+        return data_output
