@@ -1,7 +1,4 @@
-import urllib
-import urllib.error
 import requests
-import json
 import time
 from http import client
 

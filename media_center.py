@@ -1,6 +1,3 @@
-from http import client
-import urllib
-import json
 import movie
 import the_movie_db
 import fresh_tomatoes
