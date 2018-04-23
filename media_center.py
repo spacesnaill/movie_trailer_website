@@ -17,7 +17,6 @@ input_file.close()
 movie_list = []
 for index in range(0, len(input_list)):
     input_list[index] = input_list[index].strip()
-    print(input_list[index])
 
 for item in input_list:
     movie_id = moviedb.get_movie_id(item)

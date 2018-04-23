@@ -16,7 +16,6 @@ class The_Movie_DB:
         # make the request to the database
         r = requests.get(
             'http://api.themoviedb.org/3/search/movie', params=payload)
-        print(r.status_code)
         if r.status_code == 429:
             # status code 429 means we sent too many requests.
             # 'Retry-After' is the amount of seconds that it wants us to wait
