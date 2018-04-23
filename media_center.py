@@ -22,7 +22,7 @@ for index in range(0, len(input_list)):
 for item in input_list:
     movie_id = moviedb.get_movie_id(item)
     if movie_id is None:
-        continue
+        continue  # if the movie not found, go to the next item
     movie_data = moviedb.get_movie_data(
         movie_id, "title", "overview", 'poster_path', 'trailer')
     poster_link = 'http://image.tmdb.org/t/p/w185//{}'.format(
