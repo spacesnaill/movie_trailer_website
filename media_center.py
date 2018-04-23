@@ -1,6 +1,7 @@
 import movie
 import the_movie_db
 import fresh_tomatoes
+import sys
 # This product uses the TMDb API but is not endorsed or certified by TMDb.
 
 # api key to make requests from the movie db
@@ -10,8 +11,12 @@ api_key = "aeaf03c5d04aa0655aa5b437097043b9"
 # moved a lot of the api calls over to there to better organize things and
 # make it easier to reuse it in the future
 moviedb = the_movie_db.The_Movie_DB(api_key)
-
-input_file = open('input.txt')
+try:
+    input_file = open('input.txt')
+except FileNotFoundError as file_not_found:
+    print("""File could not be located, make sure it is in the same directory
+          as the program and is labeled 'input.txt'""")
+    sys.exit(1)  # if the file could not be found, exit the program
 
 input_list = input_file.readlines()
 input_file.close()
