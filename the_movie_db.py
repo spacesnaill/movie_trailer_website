@@ -18,6 +18,7 @@ class The_Movie_DB:
                    'api_key': self.api_key, }
 
         # make the request to the database
+        # the documentation of the Requests library was a big help here
         r = requests.get(
             'http://api.themoviedb.org/3/search/movie', params=payload)
         if r.status_code == 429:
