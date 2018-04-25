@@ -23,6 +23,12 @@ After both Python and Pipenv are on your system, do the following:
 <li>Enter 'pipenv install' to install all dependencies from the Pipfile</li>
 <li>After it's finished running, enter 'pipenv shell' to enter the virtual environment</li>
 </ol>
+<br>
+<br>
+API Key:<br>
+Make sure to get your own API key and place it into the api_key variable at the top of the media_center.py file. It is necessary for this to work. The media_center.py can be opened and edited with any text editor, even something as basic as the Notepad application that comes with Windows. <br>
+To get an API key, please follow the directions found at this link: https://developers.themoviedb.org/3/getting-started/introduction
+
 
 # Usage
 Using the program is relatively straightforward. Edit the 'input.txt' file included with the program with a list of movie names, each movie on a different line, that you wish to create a movie trailer website out of. In theory, you can put as many movies as you'd like. Some example movies are provided for your convenience.
