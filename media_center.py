@@ -5,7 +5,7 @@ import sys
 # This product uses the TMDb API but is not endorsed or certified by TMDb.
 
 # api key to make requests from the movie db
-api_key = "aeaf03c5d04aa0655aa5b437097043b9"
+api_key = ""  # you will need to provide your own API key from themoviedb.org
 
 # create a the_movie_db object called moviedb
 # moved a lot of the api calls over to there to better organize things and
