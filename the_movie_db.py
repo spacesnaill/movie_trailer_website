@@ -1,6 +1,7 @@
 import requests
 import time
 from http import client
+# This product uses the TMDb API but is not endorsed or certified by TMDb.
 
 
 class The_Movie_DB:

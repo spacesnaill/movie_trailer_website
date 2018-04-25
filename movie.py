@@ -1,6 +1,7 @@
 class Movie:
     # Movie call holds data about the movie in question
     # For this program that data comes from The Movie Database
+    # This product uses the TMDb API but is not endorsed or certified by TMDb.
     def __init__(self, title, description, poster, trailer):
         self.title = title  # the title of the movie
         self.desc = description  # a description of the movie
